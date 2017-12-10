@@ -9,15 +9,16 @@ using System.Web.Mvc;
 using MVCHomeWork.Models;
 
 namespace MVCHomeWork.Controllers
-{ 
-    public class CustomerController : Controller
+{
+    public class CustomerController : BaseController
     {
-        private CustomerEntities db = new CustomerEntities();
+        //private CustomerEntities db = new CustomerEntities();
 
         // GET: Customer
         public ActionResult Index()
         {
-            return View(db.客戶資料.ToList());
+            //return View(db.客戶資料.ToList());
+            return View(_CustomerRepository.GetTop100());
         }
 
         // GET: Customer/Details/5
@@ -27,7 +28,7 @@ namespace MVCHomeWork.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            客戶資料 客戶資料 = db.客戶資料.Find(id);
+            客戶資料 客戶資料 = _CustomerRepository.Find(id);
             if (客戶資料 == null)
             {
                 return HttpNotFound();
@@ -50,8 +51,8 @@ namespace MVCHomeWork.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.客戶資料.Add(客戶資料);
-                db.SaveChanges();
+                _CustomerRepository.Add(客戶資料);
+                _CustomerRepository.UnitOfWork.Commit();
                 return RedirectToAction("Index");
             }
 
@@ -65,7 +66,7 @@ namespace MVCHomeWork.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            客戶資料 客戶資料 = db.客戶資料.Find(id);
+            客戶資料 客戶資料 = _CustomerRepository.Find(id);
             if (客戶資料 == null)
             {
                 return HttpNotFound();
@@ -82,8 +83,13 @@ namespace MVCHomeWork.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.Entry(客戶資料).State = EntityState.Modified;
-                db.SaveChanges();
+                客戶資料 data = _CustomerRepository.Find(客戶資料.Id);
+                data.傳真 = 客戶資料.傳真;
+                data.地址 = 客戶資料.地址;
+                data.客戶名稱 = 客戶資料.客戶名稱;
+                data.統一編號 = 客戶資料.統一編號;
+                data.電話 = 客戶資料.電話;
+                _CustomerRepository.UnitOfWork.Commit();
                 return RedirectToAction("Index");
             }
             return View(客戶資料);
@@ -96,7 +102,7 @@ namespace MVCHomeWork.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            客戶資料 客戶資料 = db.客戶資料.Find(id);
+            客戶資料 客戶資料 =_CustomerRepository.Find(id);
             if (客戶資料 == null)
             {
                 return HttpNotFound();
@@ -105,21 +111,20 @@ namespace MVCHomeWork.Controllers
         }
 
         // POST: Customer/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
-        {
-            客戶資料 客戶資料 = db.客戶資料.Find(id);
-            db.客戶資料.Remove(客戶資料);
-            db.SaveChanges();
-            return RedirectToAction("Index");
-        }
+        //[HttpPost, ActionName("Delete")]
+        //[ValidateAntiForgeryToken]
+        //public ActionResult DeleteConfirmed(int id)
+        //{
+        //    客戶資料 客戶資料 = db.客戶資料.Find(id);
+        //    db.客戶資料.Remove(客戶資料);
+        //    db.SaveChanges();
+        //    return RedirectToAction("Index");
+        //}
 
         protected override void Dispose(bool disposing)
         {
             if (disposing)
             {
-                db.Dispose();
             }
             base.Dispose(disposing);
         }

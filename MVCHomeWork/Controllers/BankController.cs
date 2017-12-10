@@ -10,7 +10,7 @@ using MVCHomeWork.Models;
 
 namespace MVCHomeWork.Controllers
 {
-    public class BankController : Controller
+    public class BankController : BaseController
     {
         private CustomerEntities db = new CustomerEntities();
 
