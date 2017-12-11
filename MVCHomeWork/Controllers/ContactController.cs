@@ -15,9 +15,17 @@ namespace MVCHomeWork.Controllers
         //private CustomerEntities db = new CustomerEntities();
 
         // GET: Contact
-        public ActionResult Index()
+        public ActionResult Index(string keyword)
         {
-            var 客戶聯絡人 = _ContactRepository.GetTop100();
+            List<客戶聯絡人> 客戶聯絡人 = null;
+            if (string.IsNullOrWhiteSpace(keyword))
+            {
+                客戶聯絡人 = _ContactRepository.GetTop100().ToList();
+            }
+            else
+            {
+                客戶聯絡人 = _ContactRepository.Search(keyword);
+            }
             return View(客戶聯絡人.ToList());
         }
 

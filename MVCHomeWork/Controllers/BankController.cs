@@ -14,10 +14,18 @@ namespace MVCHomeWork.Controllers
     {
 
         // GET: Bank
-        public ActionResult Index()
+        public ActionResult Index(string keyword)
         {
-            var 客戶銀行資訊 = _BankRepository.GetTop100();
-            return View(客戶銀行資訊.ToList());
+            List<客戶銀行資訊> 客戶銀行資訊 = null;
+            if (string.IsNullOrWhiteSpace(keyword))
+            {
+                客戶銀行資訊 = _BankRepository.GetTop100().ToList();
+            }
+            else
+            {
+                客戶銀行資訊 = _BankRepository.Search(keyword);
+            }
+            return View(客戶銀行資訊);
         }
 
         // GET: Bank/Details/5
@@ -38,7 +46,7 @@ namespace MVCHomeWork.Controllers
         // GET: Bank/Create
         public ActionResult Create()
         {
-            ViewBag.客戶Id = new SelectList(_BankRepository.All(), "Id", "客戶名稱");
+            ViewBag.客戶Id = new SelectList(_CustomerRepository.All(), "Id", "客戶名稱");
             return View();
         }
 
@@ -72,7 +80,7 @@ namespace MVCHomeWork.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.客戶Id = new SelectList(_BankRepository.All(), "Id", "客戶名稱", 客戶銀行資訊.客戶Id);
+            ViewBag.客戶Id = new SelectList(_CustomerRepository.All(), "Id", "客戶名稱", 客戶銀行資訊.客戶Id);
             return View(客戶銀行資訊);
         }
 

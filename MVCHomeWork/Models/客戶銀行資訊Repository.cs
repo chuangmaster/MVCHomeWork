@@ -1,11 +1,11 @@
 using System;
 using System.Linq;
 using System.Collections.Generic;
-	
+
 namespace MVCHomeWork.Models
-{   
-	public  class 客戶銀行資訊Repository : EFRepository<客戶銀行資訊>, I客戶銀行資訊Repository
-	{
+{
+    public class 客戶銀行資訊Repository : EFRepository<客戶銀行資訊>, I客戶銀行資訊Repository
+    {
         public override IQueryable<客戶銀行資訊> All()
         {
             return base.All();
@@ -18,10 +18,20 @@ namespace MVCHomeWork.Models
         {
             return All().OrderByDescending(c => c.Id).Take(100);
         }
+        public List<客戶銀行資訊> Search(string keyword)
+        {
+            return All().ToList().FindAll(x =>
+            x.帳戶名稱.Contains(keyword) ||
+            x.帳戶號碼.Contains(keyword) ||
+            x.銀行名稱.Contains(keyword) ||
+            x.銀行代碼.ToString().Contains(keyword) ||
+            x.客戶資料.客戶名稱.Contains(keyword)
+            );
+        }
     }
 
-	public  interface I客戶銀行資訊Repository : IRepository<客戶銀行資訊>
-	{
+    public interface I客戶銀行資訊Repository : IRepository<客戶銀行資訊>
+    {
 
-	}
+    }
 }

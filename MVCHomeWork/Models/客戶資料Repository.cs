@@ -19,7 +19,16 @@ namespace MVCHomeWork.Models
             var result = base.All().FirstOrDefault(x=>x.Id==id);
             return result;
         }
-
+        public List<客戶資料> Search(string keyword)
+        {
+            return All().ToList().FindAll(x =>
+            x.客戶名稱.Contains(keyword) ||
+            x.統一編號.Contains(keyword) ||
+            x.電話.Contains(keyword)||
+            x.傳真.Contains(keyword) ||
+            x.地址.Contains(keyword) ||
+            x.Email.Contains(keyword));
+        }
     }
 
     public interface I客戶資料Repository : IRepository<客戶資料>
