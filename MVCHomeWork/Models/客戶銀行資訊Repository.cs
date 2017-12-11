@@ -21,12 +21,11 @@ namespace MVCHomeWork.Models
         public List<客戶銀行資訊> Search(string keyword)
         {
             return All().ToList().FindAll(x =>
-            x.帳戶名稱.Contains(keyword) ||
-            x.帳戶號碼.Contains(keyword) ||
-            x.銀行名稱.Contains(keyword) ||
-            x.銀行代碼.ToString().Contains(keyword) ||
-            x.客戶資料.客戶名稱.Contains(keyword)
-            );
+            (x.帳戶名稱 != null && x.帳戶名稱.Contains(keyword)) ||
+            (x.帳戶號碼 != null && x.帳戶號碼.Contains(keyword)) ||
+            (x.銀行名稱 != null && x.銀行名稱.Contains(keyword)) ||
+            (x.銀行代碼.ToString().Contains(keyword)) ||
+            (x.客戶資料 != null && x.客戶資料.客戶名稱 != null && x.客戶資料.客戶名稱.Contains(keyword)));
         }
     }
 

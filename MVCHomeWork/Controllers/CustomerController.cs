@@ -24,7 +24,7 @@ namespace MVCHomeWork.Controllers
             {
                 客戶資料 = _CustomerRepository.Search(keyword);
             }
-            return View(_CustomerRepository.GetTop100());
+            return View(客戶資料);
         }
 
         // GET: Customer/Details/5

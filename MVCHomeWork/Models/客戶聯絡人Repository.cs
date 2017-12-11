@@ -22,13 +22,12 @@ namespace MVCHomeWork.Models
         public List<客戶聯絡人> Search(string keyword)
         {
             return All().ToList().FindAll(x =>
-            x.職稱.Contains(keyword) ||
-            x.姓名.Contains(keyword) ||
-            x.Email.Contains(keyword) ||
-            x.手機.ToString().Contains(keyword) ||
-            x.電話.Contains(keyword)||
-            x.客戶資料.客戶名稱.Contains(keyword) 
-            );
+            (x.職稱 != null && x.職稱.Contains(keyword)) ||
+            (x.姓名.Contains(keyword) && x.姓名 != null) ||
+            (x.Email != null && x.Email.Contains(keyword)) ||
+            (x.手機 != null && x.手機.ToString().Contains(keyword)) ||
+            (x.電話 != null && x.電話.Contains(keyword)) ||
+            (x.客戶資料 != null & x.客戶資料.客戶名稱 != null && x.客戶資料.客戶名稱.Contains(keyword)));
         }
     }
     public interface I客戶聯絡人Repository : IRepository<客戶聯絡人>
