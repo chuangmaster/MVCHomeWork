@@ -10,14 +10,13 @@ namespace MVCHomeWork.Models
         {
             return base.All().OrderByDescending(c => c.Id);
         }
-        public List<客戶資料> GetTop100()
+        public IQueryable<客戶資料> GetTop100()
         {
-            var result = base.All().OrderByDescending(c => c.Id).Take(100).ToList();
-            return result;
+            return All().Take(100);
         }
-        public 客戶資料 Find(int? id)
+        public 客戶資料 Find(int id)
         {
-            var result = base.All().First(x=>x.Id==id);
+            var result = base.All().FirstOrDefault(x=>x.Id==id);
             return result;
         }
 

@@ -12,12 +12,9 @@ namespace MVCHomeWork.Controllers
 {
     public class CustomerController : BaseController
     {
-        //private CustomerEntities db = new CustomerEntities();
-
         // GET: Customer
         public ActionResult Index()
         {
-            //return View(db.客戶資料.ToList());
             return View(_CustomerRepository.GetTop100());
         }
 
@@ -28,7 +25,7 @@ namespace MVCHomeWork.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            客戶資料 客戶資料 = _CustomerRepository.Find(id);
+            客戶資料 客戶資料 = _CustomerRepository.Find(id.Value);
             if (客戶資料 == null)
             {
                 return HttpNotFound();
@@ -66,7 +63,7 @@ namespace MVCHomeWork.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            客戶資料 客戶資料 = _CustomerRepository.Find(id);
+            客戶資料 客戶資料 = _CustomerRepository.Find(id.Value);
             if (客戶資料 == null)
             {
                 return HttpNotFound();
@@ -102,7 +99,7 @@ namespace MVCHomeWork.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            客戶資料 客戶資料 =_CustomerRepository.Find(id);
+            客戶資料 客戶資料 = _CustomerRepository.Find(id.Value);
             if (客戶資料 == null)
             {
                 return HttpNotFound();
