@@ -154,6 +154,7 @@
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\ContactController.cs" />
     <Compile Include="Controllers\CustomerController.cs" />
+    <Compile Include="Controllers\CustomerStaticsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -310,6 +311,7 @@
     <Content Include="Views\Bank\Details.cshtml" />
     <Content Include="Views\Bank\Edit.cshtml" />
     <Content Include="Views\Bank\Index.cshtml" />
+    <Content Include="Views\CustomerStatics\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

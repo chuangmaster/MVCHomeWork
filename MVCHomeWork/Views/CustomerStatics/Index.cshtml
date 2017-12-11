@@ -1,0 +1,34 @@
+﻿@model IEnumerable<MVCHomeWork.Models.V_客戶統計資料>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.銀行帳戶數量)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.聯絡人數量)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.銀行帳戶數量)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.聯絡人數量)
+        </td>
+    </tr>
+}
+
+</table>
