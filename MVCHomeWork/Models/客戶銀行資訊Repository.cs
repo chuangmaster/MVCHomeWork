@@ -8,7 +8,7 @@ namespace MVCHomeWork.Models
     {
         public override IQueryable<客戶銀行資訊> All()
         {
-            return base.All();
+            return base.All().Where(x => x.是否已刪除 == false); ;
         }
         public 客戶銀行資訊 Find(int id)
         {

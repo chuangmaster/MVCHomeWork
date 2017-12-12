@@ -8,11 +8,11 @@ namespace MVCHomeWork.Models
     {
         public override IQueryable<客戶資料> All()
         {
-            return base.All().OrderByDescending(c => c.Id);
+            return base.All().Where(x => x.是否已刪除 == false);
         }
         public IQueryable<客戶資料> GetTop100()
         {
-            return All().Take(100);
+            return All().OrderByDescending(x=>x.Id).Take(100);
         }
         public 客戶資料 Find(int id)
         {

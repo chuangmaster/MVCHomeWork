@@ -1,5 +1,6 @@
 namespace MVCHomeWork.Models
 {
+    using Newtonsoft.Json;
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
@@ -35,9 +36,11 @@ namespace MVCHomeWork.Models
         [StringLength(250, ErrorMessage="欄位長度不得大於 250 個字元")]
         [EmailAddress]
         public string Email { get; set; }
-
+        [JsonIgnore]
         public bool 是否已刪除 { get; set; }
+        [JsonIgnore]
         public virtual ICollection<客戶銀行資訊> 客戶銀行資訊 { get; set; }
+        [JsonIgnore]
         public virtual ICollection<客戶聯絡人> 客戶聯絡人 { get; set; }
     }
 }
