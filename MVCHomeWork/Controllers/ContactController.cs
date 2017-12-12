@@ -7,6 +7,7 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using MVCHomeWork.Models;
+using Newtonsoft.Json;
 
 namespace MVCHomeWork.Controllers
 {
@@ -111,26 +112,33 @@ namespace MVCHomeWork.Controllers
         {
             if (id == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return Json(new { code = HttpStatusCode.BadRequest, result = false, message = "id不得為空值" }, JsonRequestBehavior.AllowGet);
             }
             客戶聯絡人 客戶聯絡人 = _ContactRepository.Find(id.Value);
             if (客戶聯絡人 == null)
             {
-                return HttpNotFound();
+                return Json(new { code = HttpStatusCode.BadRequest, result = false, message = "找不到客戶聯絡人資料" }, JsonRequestBehavior.AllowGet);
             }
-            return View(客戶聯絡人);
+            return Json(new { code = HttpStatusCode.OK, result = true, data = JsonConvert.SerializeObject(客戶聯絡人) }, JsonRequestBehavior.AllowGet);
         }
 
-        // POST: Contact/Delete/5
-        //[HttpPost, ActionName("Delete")]
-        //[ValidateAntiForgeryToken]
-        //public ActionResult DeleteConfirmed(int id)
-        //{
-        //    客戶聯絡人 客戶聯絡人 = db.客戶聯絡人.Find(id);
-        //    db.客戶聯絡人.Remove(客戶聯絡人);
-        //    db.SaveChanges();
-        //    return RedirectToAction("Index");
-        //}
+        [HttpPost, ActionName("Delete")]
+        public ActionResult DeleteConfirmed(int? id)
+        {
+            if (id == null)
+            {
+                return Json(new { code = HttpStatusCode.BadRequest, result = false, message = "id不得為空值" }, JsonRequestBehavior.DenyGet);
+            }
+            客戶聯絡人 客戶聯絡人 = _ContactRepository.Find(id.Value);
+            if (客戶聯絡人 == null)
+            {
+                return Json(new { code = HttpStatusCode.BadRequest, result = false, message = "找不到客戶聯絡人資料" }, JsonRequestBehavior.DenyGet);
+
+            }
+            客戶聯絡人.是否已刪除 = true;
+            _ContactRepository.UnitOfWork.Commit();
+            return Json(new { code = HttpStatusCode.OK, result = true }, JsonRequestBehavior.DenyGet);
+        }
 
         protected override void Dispose(bool disposing)
         {

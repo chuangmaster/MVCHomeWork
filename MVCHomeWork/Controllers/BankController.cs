@@ -7,6 +7,7 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using MVCHomeWork.Models;
+using Newtonsoft.Json;
 
 namespace MVCHomeWork.Controllers
 {
@@ -111,26 +112,33 @@ namespace MVCHomeWork.Controllers
         {
             if (id == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return Json(new { code = HttpStatusCode.BadRequest, result = false, message = "id不得為空值" }, JsonRequestBehavior.AllowGet);
             }
             客戶銀行資訊 客戶銀行資訊 = _BankRepository.Find(id.Value);
             if (客戶銀行資訊 == null)
             {
-                return HttpNotFound();
+                return Json(new { code = HttpStatusCode.BadRequest, result = false, message = "找不到客戶銀行資訊資料" }, JsonRequestBehavior.AllowGet);
             }
-            return View(客戶銀行資訊);
+            return Json(new { code = HttpStatusCode.OK, result = true, data = JsonConvert.SerializeObject(客戶銀行資訊) }, JsonRequestBehavior.AllowGet);
         }
 
-        //// POST: Bank/Delete/5
-        //[HttpPost, ActionName("Delete")]
-        //[ValidateAntiForgeryToken]
-        //public ActionResult DeleteConfirmed(int id)
-        //{
-        //    客戶銀行資訊 客戶銀行資訊 = _BankRepository.Find(id);
-        //    db.客戶銀行資訊.Remove(客戶銀行資訊);
-        //    db.SaveChanges();
-        //    return RedirectToAction("Index");
-        //}
+        [HttpPost, ActionName("Delete")]
+        public ActionResult DeleteConfirmed(int? id)
+        {
+            if (id == null)
+            {
+                return Json(new { code = HttpStatusCode.BadRequest, result = false, message = "id不得為空值" }, JsonRequestBehavior.DenyGet);
+            }
+            客戶銀行資訊 客戶銀行資訊 = _BankRepository.Find(id.Value);
+            if (客戶銀行資訊 == null)
+            {
+                return Json(new { code = HttpStatusCode.BadRequest, result = false, message = "找不到客戶銀行資訊資料" }, JsonRequestBehavior.DenyGet);
+
+            }
+            客戶銀行資訊.是否已刪除 = true;
+            _BankRepository.UnitOfWork.Commit();
+            return Json(new { code = HttpStatusCode.OK, result = true }, JsonRequestBehavior.DenyGet);
+        }
 
         protected override void Dispose(bool disposing)
         {

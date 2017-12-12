@@ -38,33 +38,170 @@
         </th>
         <th></th>
     </tr>
+    @if (Model.Count() > 0)
+    {
+        foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.職稱)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.姓名)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Email)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.手機)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.電話)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.客戶資料.客戶名稱)
+                </td>
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
+                    @Html.ActionLink("Details", "Details", new { id = item.Id }) |
+                    <a href="#" v-on:click="deleteConfirm('@Html.Raw(item.Id)')" data-toggle="modal" data-target="#myModal">Delete</a>
+                </td>
+            </tr>
+        }
+    }
+    else
+    {
+        <tr>
+            <td colspan="7">
+                找不到任何與關鍵字有關係的內容!
+            </td>
+        </tr>
+    }
+</table>
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title" id="myModalLabel">
+                    Are you sure you want to delete this?
+                </h4>
+            </div>
+            <div class="modal-body">
+                <div>
+                    <dl class="dl-horizontal">
+                        <dt>
+                            職稱
+                        </dt>
+                        <dd>
+                            {{job}}
+                        </dd>
+                        <dt>
+                            姓名
+                        </dt>
+                        <dd>
+                            {{name}}
+                        </dd>
+                        <dt>
+                            Email
+                        </dt>
+                        <dd>
+                            {{email}}
+                        </dd>
+                        <dt>
+                            手機
+                        </dt>
+                        <dd>
+                            {{phone}}
+                        </dd>
+                        <dt>
+                            電話
+                        </dt>
+                        <dd>
+                            {{tellPhone}}
+                        </dd>
+                    </dl>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">
+                    取消
+                </button>
+                <button type="button" class="btn btn-primary" v-on:click="deleteCustomer">
+                    確定刪除
+                </button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.職稱)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.姓名)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Email)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.手機)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.電話)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.客戶資料.客戶名稱)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
-            @Html.ActionLink("Details", "Details", new { id=item.Id }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.Id })
-        </td>
-    </tr>
+
+
+@section scripts{
+    <script src="https://unpkg.com/vue"></script>
+    <script>
+        var app = new Vue({
+            el: "#app",
+            data: {
+                id: '',
+                job: '',
+                name: '',
+                email: '',
+                phone: '',
+                tellPhone: '',
+            },
+            methods: {
+                deleteConfirm: function (id) {
+                    var that = this;
+                    $.ajax({
+                        url: "/Contact/Delete",
+                        dataType: "json",
+                        method: "GET",
+                        data: "id=" + id,
+                        success: function (result) {
+                            if (result) {
+                                var data = JSON.parse(result.data);
+                                that.id = id;
+                                that.job = data.job;
+                                that.name = data.name;
+                                that.email = data.email;
+                                that.phone = data.phone;
+                                that.tellPhone = data.tellPhone;
+                            } else {
+                                alert(result.data)
+                            }
+                        },
+                        error: function (result) {
+                            alert("發生錯誤");
+                        }
+                    }).done();
+                },
+                deleteCustomer: function () {
+                    var that = this;
+                    $.ajax({
+                        url: "/Contact/Delete",
+                        dataType: "json",
+                        method: "POST",
+                        data: "id=" + that.id,
+                        success: function (result) {
+                            if (result) {
+                                alert("刪除成功");
+                                location.reload();
+                            } else {
+                                alert(result.data)
+                            }
+                        },
+                        error: function (result) {
+                            alert("發生錯誤");
+                        }
+                    }).done();
+                }
+            },
+        });
+
+    </script>
 }
 
-</table>
+
