@@ -7,6 +7,7 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using MVCHomeWork.Models;
+using Newtonsoft.Json;
 
 namespace MVCHomeWork.Controllers
 {
@@ -101,31 +102,39 @@ namespace MVCHomeWork.Controllers
             return View(客戶資料);
         }
 
-        // GET: Customer/Delete/5
+        //// GET: Customer/Delete/5
         public ActionResult Delete(int? id)
         {
             if (id == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return Json(new { code = HttpStatusCode.BadRequest, result = false, message = "id不得為空值" }, JsonRequestBehavior.AllowGet);
             }
             客戶資料 客戶資料 = _CustomerRepository.Find(id.Value);
             if (客戶資料 == null)
             {
-                return HttpNotFound();
+                return Json(new { code = HttpStatusCode.BadRequest, result = false, message = "找不到客戶資料" }, JsonRequestBehavior.AllowGet);
             }
-            return View(客戶資料);
+            return Json(new { code = HttpStatusCode.OK, result = true, data = JsonConvert.SerializeObject(客戶資料) }, JsonRequestBehavior.AllowGet);
         }
 
         // POST: Customer/Delete/5
-        //[HttpPost, ActionName("Delete")]
-        //[ValidateAntiForgeryToken]
-        //public ActionResult DeleteConfirmed(int id)
-        //{
-        //    客戶資料 客戶資料 = db.客戶資料.Find(id);
-        //    db.客戶資料.Remove(客戶資料);
-        //    db.SaveChanges();
-        //    return RedirectToAction("Index");
-        //}
+        [HttpPost, ActionName("Delete")]
+        public ActionResult DeleteConfirmed(int? id)
+        {
+            if (id == null)
+            {
+                return Json(new { code = HttpStatusCode.BadRequest, result = false, message = "id不得為空值" }, JsonRequestBehavior.DenyGet);
+            }
+            客戶資料 客戶資料 = _CustomerRepository.Find(id.Value);
+            if (客戶資料 == null)
+            {
+                return Json(new { code = HttpStatusCode.BadRequest, result = false, message = "找不到客戶資料" }, JsonRequestBehavior.DenyGet);
+
+            }
+            客戶資料.是否已刪除 = true;
+            _CustomerRepository.UnitOfWork.Commit();
+            return Json(new { code = HttpStatusCode.OK, result = true }, JsonRequestBehavior.DenyGet);
+        }
 
         protected override void Dispose(bool disposing)
         {
