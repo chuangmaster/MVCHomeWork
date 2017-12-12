@@ -1,5 +1,6 @@
 namespace MVCHomeWork.Models
 {
+    using MVCHomeWork.Models.Validate.Attribute;
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
@@ -29,6 +30,7 @@ namespace MVCHomeWork.Models
         public string Email { get; set; }
         
         [StringLength(50, ErrorMessage="欄位長度不得大於 50 個字元")]
+        [MobilePhoneValidate]
         public string 手機 { get; set; }
         
         [StringLength(50, ErrorMessage="欄位長度不得大於 50 個字元")]

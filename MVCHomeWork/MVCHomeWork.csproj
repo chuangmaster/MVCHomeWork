@@ -196,6 +196,7 @@
     <Compile Include="Models\RepositoryHelper.cs">
       <DependentUpon>IRepository.EF6.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\Validate\Attribute\MobilePhoneValidateAttribute.cs" />
     <Compile Include="Models\V_客戶統計資料.cs">
       <DependentUpon>Customer.tt</DependentUpon>
     </Compile>
