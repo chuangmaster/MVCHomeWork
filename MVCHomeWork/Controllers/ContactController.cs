@@ -16,18 +16,26 @@ namespace MVCHomeWork.Controllers
         //private CustomerEntities db = new CustomerEntities();
 
         // GET: Contact
-        public ActionResult Index(string keyword)
+        public ActionResult Index(string keyword, string job)
         {
             List<客戶聯絡人> 客戶聯絡人 = null;
-            if (string.IsNullOrWhiteSpace(keyword))
+            if (string.IsNullOrWhiteSpace(keyword) && string.IsNullOrWhiteSpace(job))
             {
                 客戶聯絡人 = _ContactRepository.GetTop100().ToList();
+            }
+            else if(!string.IsNullOrWhiteSpace(job))
+            {
+                客戶聯絡人 = _ContactRepository.Search(job);
             }
             else
             {
                 客戶聯絡人 = _ContactRepository.Search(keyword);
             }
-            return View(客戶聯絡人.ToList());
+            var list = _ContactRepository.All().ToList();
+            var jobCategory = (from item in list select new { 職稱分類 = item.職稱 }).Distinct().ToList();
+            jobCategory.Add(new { 職稱分類 = "" });
+            ViewBag.職稱分類 = new SelectList(jobCategory, "職稱分類", "職稱分類", selectedValue: "");
+            return View(客戶聯絡人);
         }
 
         // GET: Contact/Details/5

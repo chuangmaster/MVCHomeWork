@@ -15,7 +15,7 @@ namespace MVCHomeWork.Controllers
     {
 
         // GET: Bank
-        public ActionResult Index(string keyword)
+        public ActionResult Index(string keyword,string job)
         {
             List<客戶銀行資訊> 客戶銀行資訊 = null;
             if (string.IsNullOrWhiteSpace(keyword))
