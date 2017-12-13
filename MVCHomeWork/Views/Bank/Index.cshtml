@@ -9,10 +9,10 @@
 <p>
     @Html.ActionLink("Create New", "Create")
 </p>
-<div>
+<div class="row">
     @using (Html.BeginForm())
     {
-        @Html.TextBox("KEYword", string.Empty, new { placeholder = "輸入你要搜尋的內容..." })
+        @Html.TextBox("keyword", string.Empty, new { placeholder = "輸入你要搜尋的內容..." })
         <input type="submit" value="Search" class="btn btn-default" />
     }
 </div>
