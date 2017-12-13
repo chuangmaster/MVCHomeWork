@@ -42,6 +42,11 @@ namespace MVCHomeWork.Models
         [EmailAddress]
         [JsonProperty("email")]
         public string Email { get; set; }
+
+        [StringLength(50, ErrorMessage = "欄位長度不得大於 50 個字元")]
+        [JsonProperty("category")]
+        public string 客戶分類 { get; set; }
+
         [JsonIgnore]
         public bool 是否已刪除 { get; set; }
         [JsonIgnore]

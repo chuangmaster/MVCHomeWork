@@ -36,6 +36,9 @@
         <th>
             @Html.DisplayNameFor(model => model.Email)
         </th>
+        <th>
+            @Html.DisplayNameFor(model => model.客戶分類)
+        </th>
         <th></th>
     </tr>
     @if (Model.Count() > 0)
@@ -60,6 +63,9 @@
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Email)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.客戶分類)
                 </td>
                 <td>
                     @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
@@ -123,10 +129,16 @@
                             {{addr}}
                         </dd>
                         <dt>
-                            地址
+                            email
                         </dt>
                         <dd>
                             {{email}}
+                        </dd>
+                        <dt>
+                            客戶分類
+                        </dt>
+                        <dd>
+                            {{category}}
                         </dd>
                     </dl>
                 </div>
@@ -158,6 +170,7 @@
                 fax: '',
                 addr: '',
                 email: '',
+                category: '',
             },
             methods: {
                 deleteConfirm: function (id) {
@@ -177,6 +190,7 @@
                                 that.fax = data.fax;
                                 that.addr = data.addr;
                                 that.email = data.email;
+                                that.category = data.category;
                             } else {
                                 alert(result.data)
                             }
