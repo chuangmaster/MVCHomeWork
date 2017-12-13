@@ -12,7 +12,7 @@ namespace MVCHomeWork.Models
         }
         public IQueryable<客戶資料> GetTop100()
         {
-            return All().OrderByDescending(x=>x.Id).Take(100);
+            return All().OrderByDescending(x => x.Id).Take(100);
         }
         public 客戶資料 Find(int id)
         {
@@ -22,12 +22,13 @@ namespace MVCHomeWork.Models
         public List<客戶資料> Search(string keyword)
         {
             return All().ToList().FindAll(x =>
-            (x.客戶名稱 != null && x.客戶名稱.Contains(keyword)) ||
-            (x.統一編號 != null && x.統一編號.Contains(keyword)) ||
-            (x.電話 != null && x.電話.Contains(keyword)) ||
-            (x.傳真 != null && x.傳真.Contains(keyword)) ||
-            (x.地址 != null && x.地址.Contains(keyword)) ||
-            (x.Email != null && x.Email.Contains(keyword)));
+            (!string.IsNullOrWhiteSpace(x.客戶名稱 ) && x.客戶名稱.Contains(keyword)) ||
+            (!string.IsNullOrWhiteSpace(x.統一編號) && x.統一編號.Contains(keyword)) ||
+            (!string.IsNullOrWhiteSpace(x.電話) && x.電話.Contains(keyword)) ||
+            (!string.IsNullOrWhiteSpace(x.傳真) && x.傳真.Contains(keyword)) ||
+            (!string.IsNullOrWhiteSpace(x.地址) && x.地址.Contains(keyword)) ||
+            (!string.IsNullOrWhiteSpace(x.Email)&& x.Email.Contains(keyword)) ||
+            (!string.IsNullOrWhiteSpace(x.客戶分類) && x.客戶分類.Contains(keyword)));
         }
     }
 

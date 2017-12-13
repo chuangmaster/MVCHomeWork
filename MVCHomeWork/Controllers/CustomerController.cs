@@ -14,17 +14,25 @@ namespace MVCHomeWork.Controllers
     public class CustomerController : BaseController
     {
         // GET: Customer
-        public ActionResult Index(string keyword)
+        public ActionResult Index(string keyword, string category)
         {
             List<客戶資料> 客戶資料 = null;
-            if (string.IsNullOrWhiteSpace(keyword))
+            if (string.IsNullOrWhiteSpace(keyword) && string.IsNullOrWhiteSpace(category))
             {
                 客戶資料 = _CustomerRepository.GetTop100().ToList();
+            }
+            else if (!string.IsNullOrWhiteSpace(category))
+            {
+                客戶資料 = _CustomerRepository.Search(category);
             }
             else
             {
                 客戶資料 = _CustomerRepository.Search(keyword);
             }
+            var selectList = _CustomerRepository.GetTop100().ToList();
+            var customerCategory = (from c in selectList select new { 客戶分類 = c.客戶分類.Trim() }).Distinct().ToList();
+            customerCategory.Add(new { 客戶分類 = string.Empty});
+            ViewBag.客戶分類 = new SelectList(customerCategory, "客戶分類", "客戶分類", selectedValue: string.Empty);
             return View(客戶資料);
         }
 

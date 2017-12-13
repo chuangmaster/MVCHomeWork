@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<MVCHomeWork.Models.客戶資料>
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "客戶資料列表";
 }
 
 <h2>Index</h2>
@@ -9,10 +9,13 @@
 <p>
     @Html.ActionLink("Create New", "Create")
 </p>
-<div>
+<div class="row">
     @using (Html.BeginForm())
     {
-        @Html.TextBox("KEYword", string.Empty, new { placeholder = "輸入你要搜尋的內容..." })
+        @Html.Label("分類搜尋:", htmlAttributes: new { @class = "control-label col-md-1" })
+        @Html.DropDownList("category", (IEnumerable<SelectListItem>) ViewBag.客戶分類, htmlAttributes: new { @class = "control-label col-md-4" })
+        @Html.Label("關鍵字搜尋:", htmlAttributes: new { @class = "control-label col-md-1" })
+        @Html.TextBox("keyword", string.Empty, new { placeholder = "輸入你要搜尋的內容...", @class = "control-label col-md-4" })
         <input type="submit" value="Search" class="btn btn-default" />
     }
 </div>
