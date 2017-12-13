@@ -34,7 +34,7 @@ namespace MVCHomeWork.Models
         public string Email { get; set; }
         
         [StringLength(50, ErrorMessage="欄位長度不得大於 50 個字元")]
-        [MobilePhoneValidate]
+        [MobilePhoneValidate(ErrorMessage ="手機格式必須如0911-111111")]
         [JsonProperty("phone")]
         public string 手機 { get; set; }
         
