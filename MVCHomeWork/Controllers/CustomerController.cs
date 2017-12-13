@@ -29,8 +29,8 @@ namespace MVCHomeWork.Controllers
             {
                 客戶資料 = _CustomerRepository.Search(keyword);
             }
-            var selectList = _CustomerRepository.GetTop100().ToList();
-            var customerCategory = (from c in selectList select new { 客戶分類 = c.客戶分類.Trim() }).Distinct().ToList();
+            var list = _CustomerRepository.All().ToList();
+            var customerCategory = (from c in list where !string.IsNullOrWhiteSpace(c.客戶分類) select new { 客戶分類 = c.客戶分類.Trim() }).Distinct().ToList();
             customerCategory.Add(new { 客戶分類 = string.Empty});
             ViewBag.客戶分類 = new SelectList(customerCategory, "客戶分類", "客戶分類", selectedValue: string.Empty);
             return View(客戶資料);
