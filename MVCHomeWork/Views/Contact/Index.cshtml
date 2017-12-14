@@ -13,16 +13,26 @@
     @using (Html.BeginForm())
     {
         @Html.Label("分類搜尋:", htmlAttributes: new { @class = "control-label col-md-1" })
-        @Html.DropDownList("job", (IEnumerable<SelectListItem>)ViewBag.職稱分類, htmlAttributes: new { @class = "control-label col-md-4" })
+        @Html.DropDownList("keyword", (IEnumerable<SelectListItem>)ViewBag.職稱分類, htmlAttributes: new { @class = "control-label col-md-4" })
         @Html.Label("關鍵字搜尋:", htmlAttributes: new { @class = "control-label col-md-1" })
         @Html.TextBox("keyword", string.Empty, new { placeholder = "輸入你要搜尋的內容..." , @class = "control-label col-md-4" })
+        <input type="submit" value="Search" class="btn btn-default" />
+    }
+</div>
+<div class="row">
+    @using (Html.BeginForm())
+    {
+        @Html.Label("排序依據:", htmlAttributes: new { @class = "control-label col-md-1" })
+        @Html.DropDownList("orderByKey", (IEnumerable<SelectListItem>)ViewBag.職稱分類, htmlAttributes: new { @class = "control-label col-md-4" })
+        @Html.Label("排序方式:", htmlAttributes: new { @class = "control-label col-md-1" })
+        @Html.TextBox("orderByWay", string.Empty, new { placeholder = "輸入你要搜尋的內容...", @class = "control-label col-md-4" })
         <input type="submit" value="Search" class="btn btn-default" />
     }
 </div>
 <table class="table">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.職稱)
+           @Html.DisplayNameFor(model => model.職稱)
         </th>
         <th>
             @Html.DisplayNameFor(model => model.姓名)

@@ -8,6 +8,7 @@ using System.Web;
 using System.Web.Mvc;
 using MVCHomeWork.Models;
 using Newtonsoft.Json;
+using MVCHomeWork.Service;
 
 namespace MVCHomeWork.Controllers
 {
@@ -15,7 +16,7 @@ namespace MVCHomeWork.Controllers
     {
 
         // GET: Bank
-        public ActionResult Index(string keyword,string job)
+        public ActionResult Index(string keyword, string job)
         {
             List<客戶銀行資訊> 客戶銀行資訊 = null;
             if (string.IsNullOrWhiteSpace(keyword))
@@ -26,6 +27,7 @@ namespace MVCHomeWork.Controllers
             {
                 客戶銀行資訊 = _BankRepository.Search(keyword);
             }
+            TempData["xlsTemp"] = 客戶銀行資訊.AsEnumerable<客戶銀行資訊>();
             return View(客戶銀行資訊);
         }
 
@@ -140,6 +142,24 @@ namespace MVCHomeWork.Controllers
             return Json(new { code = HttpStatusCode.OK, result = true }, JsonRequestBehavior.DenyGet);
         }
 
+        public ActionResult ExportExcel()
+        {
+            IEnumerable<客戶銀行資訊> bankData = null;
+            if (TempData["xlsTemp"] != null)
+            {
+                bankData = TempData["xlsTemp"] as IEnumerable<客戶銀行資訊>;
+                bankData.Select(x => 
+                new { Id = x.Id, 銀行名稱 = x.銀行名稱, 分行代碼 = x.分行代碼, 銀行代碼 = x.銀行代碼, 帳戶名稱 = x.帳戶名稱, 帳戶號碼 = x.帳戶號碼 });
+            }
+            else
+            {
+                bankData = _BankRepository.All().Select(x =>
+                new 客戶銀行資訊 { Id = x.Id, 銀行名稱 = x.銀行名稱, 分行代碼 = x.分行代碼, 銀行代碼 = x.銀行代碼, 帳戶名稱 = x.帳戶名稱, 帳戶號碼 = x.帳戶號碼 }).AsEnumerable<客戶銀行資訊>();
+            }
+            var header = new List<string>() { "Id", "銀行名稱", "分行代碼", "銀行代碼", "帳戶名稱", "帳戶號碼" };
+            var fileName = ExcelExportService.Export(Server.MapPath("~/App_Data"), "客戶銀行資訊", header, bankData);
+            return File(fileName, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "ExportFile.xlsx");
+        }
         protected override void Dispose(bool disposing)
         {
             if (disposing)
