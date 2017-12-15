@@ -15,12 +15,12 @@ namespace MVCHomeWork.Controllers
     public class CustomerController : BaseController
     {
         // GET: Customer
-        public ActionResult Index(string keyword, string category)
+        public ActionResult Index(string keyword, string category, string sortBy = "", string sortDirection = "")
         {
             List<客戶資料> 客戶資料 = null;
             if (string.IsNullOrWhiteSpace(keyword) && string.IsNullOrWhiteSpace(category))
             {
-                客戶資料 = _CustomerRepository.GetTop100().ToList();
+                客戶資料 = _CustomerRepository.GetTop100(sortBy, sortDirection).ToList();
             }
             else if (!string.IsNullOrWhiteSpace(category))
             {
@@ -34,6 +34,8 @@ namespace MVCHomeWork.Controllers
             var customerCategory = (from c in list where !string.IsNullOrWhiteSpace(c.客戶分類) select new { 客戶分類 = c.客戶分類.Trim() }).Distinct().ToList();
             customerCategory.Add(new { 客戶分類 = string.Empty });
             ViewBag.客戶分類 = new SelectList(customerCategory, "客戶分類", "客戶分類", selectedValue: string.Empty);
+            ViewBag.sortBy = new SelectList(GetSortDirection(), "key", "desc", selectedValue: "姓名");
+            ViewBag.sortDirection = new SelectList(GetSortBy(), "key", "desc", selectedValue: "desc");
             TempData["xlsTemp"] = 客戶資料;
             return View(客戶資料);
         }
@@ -164,6 +166,23 @@ namespace MVCHomeWork.Controllers
             var header = new List<string>() { "Id", "姓名", "職稱", "手機", "電話" };
             var fileName = ExcelExportService.Export(Server.MapPath("~/App_Data"), "客戶資料", header, contactData);
             return File(fileName, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "ExportFile.xlsx");
+        }
+        private List<dynamic> GetSortBy()
+        {
+            return new List<dynamic>() { new { key = "asc", desc = "升冪" }, new { key = "desc", desc = "降冪" } };
+        }
+        private List<dynamic> GetSortDirection()
+        {
+            return new List<dynamic>() {
+                new { key = "客戶名稱", desc = "客戶名稱" },
+                new { key = "統一編號", desc = "統一編號" },
+                new { key = "Email", desc = "Email" },
+                new { key = "電話", desc = "電話" },
+                new { key = "傳真", desc = "傳真" },
+                new { key = "地址", desc = "地址" },
+                new { key = "客戶分類", desc = "客戶分類" },
+
+            };
         }
         protected override void Dispose(bool disposing)
         {

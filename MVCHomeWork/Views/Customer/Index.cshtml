@@ -19,6 +19,16 @@
         <input type="submit" value="Search" class="btn btn-default" />
     }
 </div>
+<div class="row">
+    @using (Html.BeginForm())
+    {
+        @Html.Label("排序依據:", htmlAttributes: new { @class = "control-label col-md-1" })
+        @Html.DropDownList("sortBy", (IEnumerable<SelectListItem>)ViewBag.sortBy, htmlAttributes: new { @class = "control-label col-md-4" })
+        @Html.Label("排序方式:", htmlAttributes: new { @class = "control-label col-md-1" })
+        @Html.DropDownList("sortDirection", (IEnumerable<SelectListItem>)ViewBag.sortDirection, htmlAttributes: new { @class = "control-label col-md-4" })
+        <input type="submit" value="Search" class="btn btn-default" />
+    }
+</div>
 <table class="table">
     <tr>
         <th>

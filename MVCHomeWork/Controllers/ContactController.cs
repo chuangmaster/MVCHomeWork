@@ -17,12 +17,12 @@ namespace MVCHomeWork.Controllers
         //private CustomerEntities db = new CustomerEntities();
 
         // GET: Contact
-        public ActionResult Index(string keyword, string job)
+        public ActionResult Index(string keyword, string job, string sortBy="", string sortDirection="")
         {
             List<客戶聯絡人> 客戶聯絡人 = null;
             if (string.IsNullOrWhiteSpace(keyword) && string.IsNullOrWhiteSpace(job))
             {
-                客戶聯絡人 = _ContactRepository.GetTop100().ToList();
+                客戶聯絡人 = _ContactRepository.GetTop100(sortBy, sortDirection).ToList();
             }
             else if(!string.IsNullOrWhiteSpace(job))
             {
@@ -36,6 +36,9 @@ namespace MVCHomeWork.Controllers
             var jobCategory = (from item in list select new { 職稱分類 = item.職稱 }).Distinct().ToList();
             jobCategory.Add(new { 職稱分類 = "" });
             ViewBag.職稱分類 = new SelectList(jobCategory, "職稱分類", "職稱分類", selectedValue: "");
+            ViewBag.sortBy = new SelectList(GetSortDirection(), "key", "desc", selectedValue: "姓名");
+            ViewBag.sortDirection = new SelectList(GetSortBy(), "key", "desc", selectedValue: "desc");
+            
             TempData["xlsTemp"] = 客戶聯絡人;
             return View(客戶聯絡人);
         }
@@ -167,6 +170,22 @@ namespace MVCHomeWork.Controllers
             var header = new List<string>() { "Id", "姓名", "職稱", "手機", "電話" };
             var fileName = ExcelExportService.Export(Server.MapPath("~/App_Data"), "客戶聯絡人", header, contactData);
             return File(fileName, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "ExportFile.xlsx");
+        }
+
+        private List<dynamic> GetSortBy()
+        {
+            return new List<dynamic>() { new {key= "asc", desc= "升冪" }, new { key = "desc", desc = "降冪" } };
+        }
+        private List<dynamic> GetSortDirection()
+        {
+            return new List<dynamic>() {
+                new { key = "職稱", desc = "職稱" },
+                new { key = "姓名", desc = "姓名" },
+                new { key = "Email", desc = "Email" },
+                new { key = "手機", desc = "手機" },
+                new { key = "電話", desc = "電話" },
+                new { key = "客戶id", desc = "客戶名稱" },
+            };
         }
         protected override void Dispose(bool disposing)
         {

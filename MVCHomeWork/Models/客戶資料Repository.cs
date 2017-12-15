@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Linq.Dynamic.Core;
 using System.Collections.Generic;
 
 namespace MVCHomeWork.Models
@@ -10,9 +11,10 @@ namespace MVCHomeWork.Models
         {
             return base.All().Where(x => x.是否已刪除 == false);
         }
-        public IQueryable<客戶資料> GetTop100()
+        public IQueryable<客戶資料> GetTop100(string sortBy="", string sortDirection="")
         {
-            return All().OrderByDescending(x => x.Id).Take(100);
+            var orderBy = string.IsNullOrWhiteSpace(sortBy) || string.IsNullOrWhiteSpace(sortDirection) ? "Id Desc" : string.Format($"{sortBy} {sortDirection}");
+            return All().OrderBy(orderBy).Take(100);
         }
         public 客戶資料 Find(int id)
         {
