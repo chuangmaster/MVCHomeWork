@@ -144,17 +144,17 @@ namespace MVCHomeWork.Controllers
 
         public ActionResult ExportExcel()
         {
-            IEnumerable<客戶銀行資訊> bankData = null;
+            IEnumerable<dynamic> bankData = null;
             if (TempData["xlsTemp"] != null)
             {
                 bankData = TempData["xlsTemp"] as IEnumerable<客戶銀行資訊>;
-                bankData.Select(x => 
+                bankData = bankData.Select(x =>
                 new { Id = x.Id, 銀行名稱 = x.銀行名稱, 分行代碼 = x.分行代碼, 銀行代碼 = x.銀行代碼, 帳戶名稱 = x.帳戶名稱, 帳戶號碼 = x.帳戶號碼 });
             }
             else
             {
                 bankData = _BankRepository.All().Select(x =>
-                new 客戶銀行資訊 { Id = x.Id, 銀行名稱 = x.銀行名稱, 分行代碼 = x.分行代碼, 銀行代碼 = x.銀行代碼, 帳戶名稱 = x.帳戶名稱, 帳戶號碼 = x.帳戶號碼 }).AsEnumerable<客戶銀行資訊>();
+                new { Id = x.Id, 銀行名稱 = x.銀行名稱, 分行代碼 = x.分行代碼, 銀行代碼 = x.銀行代碼, 帳戶名稱 = x.帳戶名稱, 帳戶號碼 = x.帳戶號碼 }).AsEnumerable<dynamic>();
             }
             var header = new List<string>() { "Id", "銀行名稱", "分行代碼", "銀行代碼", "帳戶名稱", "帳戶號碼" };
             var fileName = ExcelExportService.Export(Server.MapPath("~/App_Data"), "客戶銀行資訊", header, bankData);

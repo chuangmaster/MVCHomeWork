@@ -8,6 +8,7 @@ using System.Web;
 using System.Web.Mvc;
 using MVCHomeWork.Models;
 using Newtonsoft.Json;
+using MVCHomeWork.Service;
 
 namespace MVCHomeWork.Controllers
 {
@@ -35,6 +36,7 @@ namespace MVCHomeWork.Controllers
             var jobCategory = (from item in list select new { 職稱分類 = item.職稱 }).Distinct().ToList();
             jobCategory.Add(new { 職稱分類 = "" });
             ViewBag.職稱分類 = new SelectList(jobCategory, "職稱分類", "職稱分類", selectedValue: "");
+            TempData["xlsTemp"] = 客戶聯絡人;
             return View(客戶聯絡人);
         }
 
@@ -148,6 +150,24 @@ namespace MVCHomeWork.Controllers
             return Json(new { code = HttpStatusCode.OK, result = true }, JsonRequestBehavior.DenyGet);
         }
 
+        public ActionResult ExportExcel()
+        {
+            IEnumerable<dynamic> contactData = null;
+            if (TempData["xlsTemp"] != null)
+            {
+                contactData = TempData["xlsTemp"] as IEnumerable<客戶聯絡人>;
+                contactData = contactData.Select(x =>
+                new { Id=x.Id, 姓名 = x.姓名, 職稱 = x.職稱, 手機 = x.手機, 電話 = x.電話 });
+            }
+            else
+            {
+                contactData = _ContactRepository.All().Select(x =>
+                new { Id = x.Id, 姓名 = x.姓名, 職稱 = x.職稱, 手機 = x.手機, 電話 = x.電話 }).AsEnumerable<dynamic>();
+            }
+            var header = new List<string>() { "Id", "姓名", "職稱", "手機", "電話" };
+            var fileName = ExcelExportService.Export(Server.MapPath("~/App_Data"), "客戶聯絡人", header, contactData);
+            return File(fileName, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "ExportFile.xlsx");
+        }
         protected override void Dispose(bool disposing)
         {
             if (disposing)

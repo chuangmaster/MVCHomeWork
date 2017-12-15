@@ -8,6 +8,7 @@ using System.Web;
 using System.Web.Mvc;
 using MVCHomeWork.Models;
 using Newtonsoft.Json;
+using MVCHomeWork.Service;
 
 namespace MVCHomeWork.Controllers
 {
@@ -31,8 +32,9 @@ namespace MVCHomeWork.Controllers
             }
             var list = _CustomerRepository.All().ToList();
             var customerCategory = (from c in list where !string.IsNullOrWhiteSpace(c.客戶分類) select new { 客戶分類 = c.客戶分類.Trim() }).Distinct().ToList();
-            customerCategory.Add(new { 客戶分類 = string.Empty});
+            customerCategory.Add(new { 客戶分類 = string.Empty });
             ViewBag.客戶分類 = new SelectList(customerCategory, "客戶分類", "客戶分類", selectedValue: string.Empty);
+            TempData["xlsTemp"] = 客戶資料;
             return View(客戶資料);
         }
 
@@ -145,7 +147,24 @@ namespace MVCHomeWork.Controllers
             _CustomerRepository.UnitOfWork.Commit();
             return Json(new { code = HttpStatusCode.OK, result = true }, JsonRequestBehavior.DenyGet);
         }
-
+        public ActionResult ExportExcel()
+        {
+            IEnumerable<dynamic> contactData = null;
+            if (TempData["xlsTemp"] != null)
+            {
+                contactData = TempData["xlsTemp"] as IEnumerable<客戶資料>;
+                contactData = contactData.Select(x =>
+                new { Id = x.Id, 客戶名稱 = x.客戶名稱, 統一編號 = x.統一編號, 電話 = x.電話, 傳真 = x.傳真, 地址 = x.地址, 客戶分類 = x.客戶分類 });
+            }
+            else
+            {
+                contactData = _CustomerRepository.All().Select(x =>
+                new { Id = x.Id, 客戶名稱 = x.客戶名稱, 統一編號 = x.統一編號, 電話 = x.電話, 傳真 = x.傳真, 地址 = x.地址, 客戶分類 = x.客戶分類 }).AsEnumerable<dynamic>();
+            }
+            var header = new List<string>() { "Id", "姓名", "職稱", "手機", "電話" };
+            var fileName = ExcelExportService.Export(Server.MapPath("~/App_Data"), "客戶資料", header, contactData);
+            return File(fileName, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "ExportFile.xlsx");
+        }
         protected override void Dispose(bool disposing)
         {
             if (disposing)

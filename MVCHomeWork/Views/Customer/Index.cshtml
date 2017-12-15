@@ -13,7 +13,7 @@
     @using (Html.BeginForm())
     {
         @Html.Label("分類搜尋:", htmlAttributes: new { @class = "control-label col-md-1" })
-        @Html.DropDownList("category", (IEnumerable<SelectListItem>) ViewBag.客戶分類, htmlAttributes: new { @class = "control-label col-md-4" })
+        @Html.DropDownList("category", (IEnumerable<SelectListItem>)ViewBag.客戶分類, htmlAttributes: new { @class = "control-label col-md-4" })
         @Html.Label("關鍵字搜尋:", htmlAttributes: new { @class = "control-label col-md-1" })
         @Html.TextBox("keyword", string.Empty, new { placeholder = "輸入你要搜尋的內容...", @class = "control-label col-md-4" })
         <input type="submit" value="Search" class="btn btn-default" />
@@ -22,25 +22,25 @@
 <table class="table">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.客戶名稱)
+            <a>@Html.DisplayNameFor(model => model.客戶名稱)</a>
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.統一編號)
+            <a>@Html.DisplayNameFor(model => model.統一編號)</a>
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.電話)
+            <a>@Html.DisplayNameFor(model => model.電話)</a>
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.傳真)
+            <a>@Html.DisplayNameFor(model => model.傳真)</a>
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.地址)
+            <a>@Html.DisplayNameFor(model => model.地址)</a>
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Email)
+            <a>@Html.DisplayNameFor(model => model.Email)</a>
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.客戶分類)
+            <a>@Html.DisplayNameFor(model => model.客戶分類)</a>
         </th>
         <th></th>
     </tr>
@@ -157,7 +157,7 @@
         </div><!-- /.modal-content -->
     </div><!-- /.modal -->
 </div>
-
+<div class="row">@Html.ActionLink("匯出Excel", "ExportExcel")</div>
 
 
 @section scripts{
