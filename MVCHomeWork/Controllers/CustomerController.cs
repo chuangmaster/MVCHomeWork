@@ -34,8 +34,8 @@ namespace MVCHomeWork.Controllers
             var customerCategory = (from c in list where !string.IsNullOrWhiteSpace(c.客戶分類) select new { 客戶分類 = c.客戶分類.Trim() }).Distinct().ToList();
             customerCategory.Add(new { 客戶分類 = string.Empty });
             ViewBag.客戶分類 = new SelectList(customerCategory, "客戶分類", "客戶分類", selectedValue: string.Empty);
-            ViewBag.sortBy = new SelectList(GetSortDirection(), "key", "desc", selectedValue: "姓名");
-            ViewBag.sortDirection = new SelectList(GetSortBy(), "key", "desc", selectedValue: "desc");
+            ViewBag.sortBy = GetSortDirectionSelectList();
+            ViewBag.sortDirection = GetSortBySelectList();
             TempData["xlsTemp"] = 客戶資料;
             return View(客戶資料);
         }
@@ -167,13 +167,19 @@ namespace MVCHomeWork.Controllers
             var fileName = ExcelExportService.Export(Server.MapPath("~/App_Data"), "客戶資料", header, contactData);
             return File(fileName, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "ExportFile.xlsx");
         }
-        private List<dynamic> GetSortBy()
+        private SelectList GetSortBySelectList()
         {
-            return new List<dynamic>() { new { key = "asc", desc = "升冪" }, new { key = "desc", desc = "降冪" } };
+            var items = new List<dynamic>() { new { key = "asc", desc = "升冪" }, new { key = "desc", desc = "降冪" } };
+            var selectList = new SelectList(items, "key", "desc");
+
+            var selected=  selectList.Where(x => x.Value == "desc").FirstOrDefault();
+            selected.Selected = true;
+            return selectList;
+
         }
-        private List<dynamic> GetSortDirection()
+        private SelectList GetSortDirectionSelectList()
         {
-            return new List<dynamic>() {
+            var items = new List<dynamic>() {
                 new { key = "客戶名稱", desc = "客戶名稱" },
                 new { key = "統一編號", desc = "統一編號" },
                 new { key = "Email", desc = "Email" },
@@ -183,6 +189,14 @@ namespace MVCHomeWork.Controllers
                 new { key = "客戶分類", desc = "客戶分類" },
 
             };
+            var selectList = new SelectList(items, "key", "desc");
+
+            foreach (var item in selectList)
+            {
+                if (item.Value == "客戶名稱")
+                    item.Selected = true;
+            }
+            return selectList;
         }
         protected override void Dispose(bool disposing)
         {
