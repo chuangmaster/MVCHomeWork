@@ -31,9 +31,8 @@ namespace MVCHomeWork.Controllers
                 客戶資料 = _CustomerRepository.Search(keyword);
             }
             var list = _CustomerRepository.All().ToList();
-            var customerCategory = (from c in list where !string.IsNullOrWhiteSpace(c.客戶分類) select new { 客戶分類 = c.客戶分類.Trim() }).Distinct().ToList();
-            customerCategory.Add(new { 客戶分類 = string.Empty });
-            ViewBag.客戶分類 = new SelectList(customerCategory, "客戶分類", "客戶分類", selectedValue: string.Empty);
+            var categoryList = (from c in list where !string.IsNullOrWhiteSpace(c.客戶分類) select new { 客戶分類 = c.客戶分類.Trim() }).Distinct().ToList();
+            ViewBag.category = new SelectList(categoryList, "客戶分類", "客戶分類");
             ViewBag.sortBy = GetSortDirectionSelectList();
             ViewBag.sortDirection = GetSortBySelectList();
             TempData["xlsTemp"] = 客戶資料;

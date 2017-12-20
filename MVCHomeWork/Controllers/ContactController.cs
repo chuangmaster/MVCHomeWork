@@ -9,6 +9,7 @@ using System.Web.Mvc;
 using MVCHomeWork.Models;
 using Newtonsoft.Json;
 using MVCHomeWork.Service;
+using MVCHomeWork.Filter;
 
 namespace MVCHomeWork.Controllers
 {
@@ -16,6 +17,7 @@ namespace MVCHomeWork.Controllers
     {
         //private CustomerEntities db = new CustomerEntities();
 
+        [ContactShareData]
         // GET: Contact
         public ActionResult Index(string keyword, string job, string sortBy="", string sortDirection="")
         {
@@ -33,9 +35,7 @@ namespace MVCHomeWork.Controllers
                 客戶聯絡人 = _ContactRepository.Search(keyword);
             }
             var list = _ContactRepository.All().ToList();
-            var jobCategory = (from item in list select new { 職稱分類 = item.職稱 }).Distinct().ToList();
-            jobCategory.Add(new { 職稱分類 = "" });
-            ViewBag.職稱分類 = new SelectList(jobCategory, "職稱分類", "職稱分類", selectedValue: "");
+
             ViewBag.sortBy = new SelectList(GetSortDirection(), "key", "desc", selectedValue: "姓名");
             ViewBag.sortDirection = new SelectList(GetSortBy(), "key", "desc", selectedValue: "desc");
             

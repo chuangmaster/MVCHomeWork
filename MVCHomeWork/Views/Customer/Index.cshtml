@@ -13,7 +13,7 @@
     @using (Html.BeginForm())
     {
         @Html.Label("分類搜尋:", htmlAttributes: new { @class = "control-label col-md-1" })
-        @Html.DropDownList("category", (IEnumerable<SelectListItem>)ViewBag.客戶分類, htmlAttributes: new { @class = "control-label col-md-4" })
+        @Html.DropDownList("category", null, "---請選擇---", htmlAttributes: new { @class = "control-label col-md-4" })
         @Html.Label("關鍵字搜尋:", htmlAttributes: new { @class = "control-label col-md-1" })
         @Html.TextBox("keyword", string.Empty, new { placeholder = "輸入你要搜尋的內容...", @class = "control-label col-md-4" })
         <input type="submit" value="Search" class="btn btn-default" />
@@ -23,9 +23,9 @@
     @using (Html.BeginForm())
     {
         @Html.Label("排序依據:", htmlAttributes: new { @class = "control-label col-md-1" })
-        @Html.DropDownList("sortBy", (IEnumerable<SelectListItem>)ViewBag.sortBy, htmlAttributes: new { @class = "control-label col-md-4" })
+        @Html.DropDownList("sortBy", (IEnumerable<SelectListItem>)ViewBag.sortBy, "---請選擇---", htmlAttributes: new { @class = "control-label col-md-4" })
         @Html.Label("排序方式:", htmlAttributes: new { @class = "control-label col-md-1" })
-        @Html.DropDownList("sortDirection", (IEnumerable<SelectListItem>)ViewBag.sortDirection, htmlAttributes: new { @class = "control-label col-md-4" })
+        @Html.DropDownList("sortDirection", (IEnumerable<SelectListItem>)ViewBag.sortDirection, "---請選擇---", htmlAttributes: new { @class = "control-label col-md-4" })
         <input type="submit" value="Search" class="btn btn-default" />
     }
 </div>
